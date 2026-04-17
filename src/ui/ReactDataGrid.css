@@ -1,0 +1,581 @@
+.widget-react-data-grid {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ── Header row ── */
+.widget-react-data-grid .rdg-header-row {
+    background-color: var(--brand-default, #264ae5);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ── Alternating rows ── */
+.widget-react-data-grid .rdg-row:nth-child(even) {
+    background-color: var(--background-secondary, #f8f8f8);
+}
+
+/* ── Hover ── */
+.widget-react-data-grid .rdg-row:hover {
+    background-color: var(--background-hover, #eaf0fb);
+}
+
+/* ── Selected row (react-data-grid adds this class automatically) ── */
+.widget-react-data-grid .rdg-row[aria-selected="true"] {
+    background-color: var(--brand-default-transparent, rgba(38, 74, 229, 0.12));
+}
+
+/* ── Cell value span ── */
+.rdg-cell-value {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rdg-cell-value--left   { text-align: left; }
+.rdg-cell-value--center { text-align: center; }
+.rdg-cell-value--right  { text-align: right; }
+
+/* ── Boolean cell: checkbox matching selection checkbox ── */
+.rdg-cell-bool-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.rdg-cell-bool-box {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 2px;
+    background: #fff;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.rdg-cell-bool-box--checked {
+    background-color: var(--brand-primary, #264ae5);
+    border-color:     var(--brand-primary, #264ae5);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 5 L4 7.5 L8.5 2.5' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:   no-repeat;
+    background-position: center;
+    background-size:     12px 12px;
+}
+
+/* ── Header label (text + sort indicator side by side) ── */
+.rdg-header-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 4px;
+    overflow: hidden;
+}
+
+/* ── Sort status ── */
+.rdg-sort-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+    color: #fff;
+    line-height: 1;
+}
+
+.rdg-sort-status__icon {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0.95;
+}
+
+.rdg-sort-status__priority {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* ── Progress bar cell ── */
+.rdg-cell-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 0 4px;
+    box-sizing: border-box;
+}
+
+.rdg-cell-progress__track {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--background-secondary, #e0e0e0);
+    overflow: hidden;
+}
+
+.rdg-cell-progress__fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--brand-primary, #264ae5);
+    transition: width 0.2s ease;
+}
+
+.rdg-cell-progress__label {
+    flex-shrink: 0;
+    font-size: 13px;
+    min-width: 36px;
+    text-align: right;
+    color: inherit;
+}
+
+/* ── Custom content cell ── */
+.rdg-cell-custom-content {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ── Empty placeholder ── */
+.rdg-empty-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 16px;
+    color: var(--gray-regular, #888);
+    font-style: italic;
+}
+
+/* ── Row selection checkboxes ────────────────────────────────────────────────
+   react-data-grid renders:  <label> <input> <span> </label>
+   All react-data-grid checkbox styles live in @layer rdg, which Atlas's
+   unlayered CSS beats. We re-assert every needed style outside any layer.
+──────────────────────────────────────────────────────────────────────────── */
+
+/* Label wrapper: centred, covers the full cell */
+.widget-react-data-grid [role="gridcell"] > label,
+.widget-react-data-grid [role="columnheader"] > label {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: absolute !important;
+    inset: 0 !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Native input: invisible overlay so clicks still toggle the checkbox */
+.widget-react-data-grid input[type="checkbox"] {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    z-index: 1 !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Visual box — the <span> immediately after the <input> */
+.widget-react-data-grid input[type="checkbox"] + div {
+    display: block !important;
+    flex-shrink: 0 !important;
+    width: 18px !important;
+    height: 18px !important;
+    border: 2px solid #ccc !important;
+    border-radius: 2px !important;
+    background: #fff !important;
+    position: relative !important;
+    pointer-events: none !important;
+    box-sizing: border-box !important;
+    /* Cancel react-data-grid's layer outline that sits on top of our ::after */
+    outline: none !important;
+}
+
+/* Checked: filled brand-blue box + SVG white checkmark as background-image
+   (avoids ::after which Atlas global styles can suppress)               */
+.widget-react-data-grid input[type="checkbox"]:checked + div {
+    background-color: var(--brand-primary, #264ae5) !important;
+    border-color:     var(--brand-primary, #264ae5) !important;
+    outline: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 5 L4 7.5 L8.5 2.5' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-repeat:   no-repeat !important;
+    background-position: center !important;
+    background-size:     12px 12px !important;
+}
+
+/* Indeterminate (header, partial selection): blue box + white minus bar */
+.widget-react-data-grid input[type="checkbox"]:indeterminate + div {
+    background-color: var(--brand-primary, #264ae5) !important;
+    border-color:     var(--brand-primary, #264ae5) !important;
+    outline: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect x='1' y='4' width='8' height='2' fill='white' rx='1'/%3E%3C/svg%3E") !important;
+    background-repeat:   no-repeat !important;
+    background-position: center !important;
+    background-size:     12px 12px !important;
+}
+
+/* Focus ring */
+.widget-react-data-grid input[type="checkbox"]:focus-visible + div {
+    outline: 2px solid var(--brand-primary, #264ae5) !important;
+    outline-offset: 1px !important;
+}
+
+/* ── Header filter cell ── */
+.rdg-header-filter-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    padding: 2px 0 5px;
+    gap: 4px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.rdg-header-filter-label {
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2;
+    font-weight: 600;
+}
+
+.rdg-header-filter-input {
+    flex-shrink: 0;
+    width: 100%;
+    padding: 0 6px;
+    border: none;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #1a1a1a;
+    font-size: 13px;
+    font-weight: 400;
+    outline: none;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+.rdg-header-filter-input::placeholder {
+    color: #999;
+}
+
+.rdg-header-filter-input:focus {
+    background: #fff;
+    box-shadow: 0 0 0 2px var(--brand-primary, #264ae5);
+}
+
+.rdg-header-filter-select {
+    appearance: auto;
+    -webkit-appearance: auto;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+/* ───────────────────────────────────────────────
+   Cell editors
+─────────────────────────────────────────────── */
+.rdg-cell-editor {
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    padding: 0 8px;
+    border: none;
+    outline: 2px solid var(--brand-default, #264ae5);
+    outline-offset: -2px;
+    background: #fff;
+    font: inherit;
+    font-size: inherit;
+    color: inherit;
+    box-sizing: border-box;
+}
+
+.rdg-cell-editor--boolean {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    outline: none;
+}
+
+.rdg-cell-editor--boolean input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--brand-default, #264ae5);
+}
+
+.rdg-cell-editor--enum {
+    cursor: pointer;
+}
+
+/* ───────────────────────────────────────────────
+   Master / Detail
+─────────────────────────────────────────────── */
+.rdg-expand-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--brand-default, #264ae5);
+    border-radius: 3px;
+    background: #fff;
+    color: var(--brand-primary, #264ae5);
+    font-size: 9px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+}
+
+.rdg-expand-btn:hover {
+    background: var(--brand-default, #264ae5);
+    color: #fff;
+}
+
+.rdg-expand-btn--open {
+    background: var(--brand-default, #264ae5);
+    color: #fff;
+}
+
+.rdg-detail-panel {
+    overflow: hidden;
+    background: var(--background-secondary, #f4f6fb);
+    border-bottom: 2px solid var(--brand-default, #264ae5);
+    padding: 4px 12px 8px;
+    box-sizing: border-box;
+    /* Use flex so a nested widget-react-data-grid can fill the remaining height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Let a nested ReactDataGrid fill the panel and manage its own scroll,
+   so react-data-grid's built-in sticky header keeps working. */
+.rdg-detail-panel .widget-react-data-grid {
+    flex: 1 1 0;
+    min-height: 0;
+    height: 100%;
+}
+
+.rdg-detail-panel .widget-react-data-grid > [role="grid"] {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+}
+
+/* Fallback sticky header for any scrollable content inside the panel */
+.rdg-detail-panel .rdg-header-row {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 3 !important;
+}
+
+/* ───────────────────────────────────────────────
+   Group-by bar
+─────────────────────────────────────────────── */
+.rdg-groupby-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    padding: 4px 0 6px;
+    font-size: 13px;
+    color: var(--gray-darker, #444);
+}
+
+.rdg-groupby-bar__label {
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--gray-darker, #444);
+}
+
+.rdg-groupby-bar__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.rdg-groupby-bar__item:hover {
+    color: var(--brand-primary, #264ae5);
+}
+
+/* Override the global row-selection rule that hides all checkboxes.
+   Needs higher specificity than: .widget-react-data-grid input[type="checkbox"] */
+.widget-react-data-grid .rdg-groupby-bar input[type="checkbox"] {
+    position: static !important;
+    inset: auto !important;
+    width: 14px !important;
+    height: 14px !important;
+    opacity: 1 !important;
+    appearance: checkbox !important;
+    -webkit-appearance: checkbox !important;
+    border: revert !important;
+    background: revert !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    z-index: auto !important;
+    accent-color: var(--brand-primary, #264ae5);
+}
+
+/* ───────────────────────────────────────────────
+   Toolbar
+─────────────────────────────────────────────── */
+.rdg-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0 6px;
+}
+
+.rdg-toolbar__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 20px;
+    border: 1px solid var(--brand-default, #264ae5);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--brand-primary, #264ae5);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.rdg-toolbar__btn:hover {
+    border-color: var(--brand-primary, #264ae5);
+    background: var(--bg-color, #f0f3ff);
+}
+
+.rdg-toolbar__btn:active {
+    opacity: 0.85;
+}
+
+.rdg-toolbar__btn--active {
+    background: var(--brand-primary, #264ae5);
+    border-color: var(--brand-primary, #264ae5);
+    color: #fff;
+}
+
+.rdg-toolbar__btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
+}
+
+.rdg-toolbar__icon {
+    font-size: 14px;
+}
+
+/* ── Column chooser ── */
+.rdg-col-chooser {
+    position: relative;
+}
+
+.rdg-col-chooser__panel {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 100;
+    min-width: 180px;
+    max-height: 320px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid var(--brand-default, #264ae5);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    padding: 6px 0;
+}
+
+.rdg-col-chooser__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.rdg-col-chooser__item:hover {
+    background: var(--background-secondary, #f0f3ff);
+}
+
+.rdg-col-chooser__item input[type="checkbox"] {
+    width: 15px !important;
+    height: 15px !important;
+    position: static !important;
+    inset: auto !important;
+    opacity: 1 !important;
+    appearance: checkbox !important;
+    -webkit-appearance: checkbox !important;
+    border: revert !important;
+    background: revert !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0;
+    cursor: pointer !important;
+    accent-color: var(--brand-primary, #264ae5);
+}
+
+/* ── Summary row ── */
+.widget-react-data-grid .rdg-summary-row {
+    background-color: var(--brand-default, #264ae5);
+    color: #fff;
+    font-weight: 600;
+}
+
+.rdg-summary-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #fff;
+    font-weight: 600;
+}
+
+.rdg-summary-cell__label {
+    font-size: 11px;
+    opacity: 0.75;
+    flex-shrink: 0;
+}
+
+/* ── Semantic cell color classes ── */
+.rdg-cell--danger  { background-color: rgba(220,  53,  69, 0.15) !important; color: #dc3545 !important; font-weight: 600; }
+.rdg-cell--warning { background-color: rgba(255, 193,   7, 0.15) !important; color: #856404 !important; font-weight: 600; }
+.rdg-cell--success { background-color: rgba( 25, 135,  84, 0.15) !important; color: #198754 !important; font-weight: 600; }
+.rdg-cell--info    { background-color: rgba( 13, 202, 240, 0.15) !important; color: #055160 !important; }
+.rdg-cell--muted   { color: var(--gray-regular, #888) !important; }

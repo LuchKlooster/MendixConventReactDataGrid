@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget id="conventsystems.reactdatagrid.ReactDataGrid" pluginWidget="true" offlineCapable="true"
+        supportedPlatform="Web"
+        xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
+    <name>React Data Grid</name>
+    <description>Data grid powered by react-data-grid with Mendix Datasource</description>
+
+    <studioProCategory>Data containers</studioProCategory>
+    <properties>
+        <propertyGroup caption="General">
+
+            <propertyGroup caption="Data source">
+                <property key="datasource" type="datasource" isList="true" required="true">
+                    <caption>Data source</caption>
+                    <description>Mendix object list to display in the grid</description>
+                </property>
+            </propertyGroup>
+
+            <propertyGroup caption="Columns">
+                <property key="columns" type="object" isList="true" required="true">
+                    <caption>Columns</caption>
+                    <description>Define one column per attribute</description>
+                    <properties>
+                        <propertyGroup caption="Column">
+                            <property key="showContentAs" type="enumeration" defaultValue="attribute">
+                                <caption>Show</caption>
+                                <description>How to display data in this column</description>
+                                <enumerationValues>
+                                    <enumerationValue key="attribute">Attribute</enumerationValue>
+                                    <enumerationValue key="dynamicText">Dynamic text</enumerationValue>
+                                    <enumerationValue key="customContent">Custom content</enumerationValue>
+                                </enumerationValues>
+                            </property>
+                            <property key="attribute" type="attribute" dataSource="../datasource" required="false">
+                                <caption>Attribute</caption>
+                                <description>The attribute to show in this column</description>
+                                <attributeTypes>
+                                    <attributeType name="String"/>
+                                    <attributeType name="Integer"/>
+                                    <attributeType name="Long"/>
+                                    <attributeType name="Decimal"/>
+                                    <attributeType name="Boolean"/>
+                                    <attributeType name="DateTime"/>
+                                    <attributeType name="Enum"/>
+                                    <attributeType name="AutoNumber"/>
+                                </attributeTypes>
+                            </property>
+                            <property key="header" type="string" required="true">
+                                <caption>Header</caption>
+                                <description>Column header text</description>
+                            </property>
+                            <property key="width" type="integer" defaultValue="150">
+                                <caption>Width (px)</caption>
+                                <description>Column width in pixels</description>
+                            </property>
+                            <property key="dynamicText" type="textTemplate" dataSource="../datasource" required="false">
+                                <caption>Dynamic text</caption>
+                                <description>Text template evaluated per row (active when Show = Dynamic text)</description>
+                            </property>
+                            <property key="content" type="widgets" dataSource="../datasource" required="false">
+                                <caption>Custom content</caption>
+                                <description>Widgets rendered per row, e.g. buttons or images (active when Show = Custom content)</description>
+                            </property>
+                            <property key="sortable" type="boolean" defaultValue="false">
+                                <caption>Sortable</caption>
+                                <description>Allow sorting on this column</description>
+                            </property>
+                            <property key="resizable" type="boolean" defaultValue="true">
+                                <caption>Resizable</caption>
+                                <description>Allow the user to resize this column</description>
+                            </property>
+                            <property key="frozen" type="boolean" defaultValue="false">
+                                <caption>Freeze column</caption>
+                                <description>Pin this column to the left side</description>
+                            </property>
+                            <property key="groupBy" type="boolean" defaultValue="false">
+                                <caption>Group by</caption>
+                                <description>Group rows by the values in this column. Multiple columns can be checked to create nested groups (order = column position).</description>
+                            </property>
+                        </propertyGroup>
+                        <propertyGroup caption="Formatting">
+                            <property key="cellClass" type="expression" dataSource="../datasource" required="false">
+                                <caption>Cell class</caption>
+                                <description>Expression that returns a CSS class name per row, e.g. if $currentObject/Priority = 'Critical' then 'rdg-cell--danger' else ''. Built-in: rdg-cell--danger, rdg-cell--warning, rdg-cell--success, rdg-cell--info, rdg-cell--muted.</description>
+                                <returnType type="String" />
+                            </property>
+                            <property key="displayStyle" type="enumeration" defaultValue="value">
+                                <caption>Display style</caption>
+                                <description>Value = plain text. Progress bar = horizontal bar for numeric values in the 0–100 range.</description>
+                                <enumerationValues>
+                                    <enumerationValue key="value">Value</enumerationValue>
+                                    <enumerationValue key="progressBar">Progress bar</enumerationValue>
+                                </enumerationValues>
+                            </property>
+                            <property key="alignment" type="enumeration" defaultValue="auto">
+                                <caption>Alignment</caption>
+                                <description>Horizontal alignment (auto = right for numbers, center for boolean, left otherwise)</description>
+                                <enumerationValues>
+                                    <enumerationValue key="auto">Auto</enumerationValue>
+                                    <enumerationValue key="left">Left</enumerationValue>
+                                    <enumerationValue key="center">Center</enumerationValue>
+                                    <enumerationValue key="right">Right</enumerationValue>
+                                </enumerationValues>
+                            </property>
+                            <property key="decimalPlaces" type="integer" defaultValue="-1">
+                                <caption>Decimal places</caption>
+                                <description>Fixed decimal places for numeric values (-1 = use Mendix default format)</description>
+                            </property>
+                            <property key="currencySymbol" type="string" required="false" defaultValue="">
+                                <caption>Currency symbol</caption>
+                                <description>Prefix symbol, e.g. €, $, £ (only applied when Decimal places ≥ 0)</description>
+                            </property>
+                            <property key="dateFormat" type="string" required="false" defaultValue="">
+                                <caption>Date format</caption>
+                                <description>Mendix pattern, e.g. dd-MM-yyyy  |  dd-MM-yyyy HH:mm  |  EEEE d MMMM yyyy  |  MMM dd, yyyy  (empty = use Mendix default format)</description>
+                            </property>
+                            <property key="aggregateFunction" type="enumeration" defaultValue="none">
+                                <caption>Aggregate</caption>
+                                <description>Show a summary value in the summary row: Sum or Average require a numeric attribute column; Count works for any column.</description>
+                                <enumerationValues>
+                                    <enumerationValue key="none">None</enumerationValue>
+                                    <enumerationValue key="sum">Sum (∑)</enumerationValue>
+                                    <enumerationValue key="count">Count (#)</enumerationValue>
+                                    <enumerationValue key="average">Average (⌀)</enumerationValue>
+                                </enumerationValues>
+                            </property>
+                        </propertyGroup>
+                    </properties>
+                </property>
+            </propertyGroup>
+
+        </propertyGroup>
+
+        <propertyGroup caption="Row Selection">
+            <property key="enableRowSelection" type="boolean" defaultValue="false">
+                <caption>Enable row selection</caption>
+                <description>Show checkboxes so users can select one or more rows</description>
+            </property>
+            <property key="onRowSelectAction" type="action" dataSource="datasource" required="false">
+                <caption>On row selected</caption>
+                <description>Fires in the context of a row when it is added to the selection</description>
+            </property>
+            <property key="onRowDeselectAction" type="action" dataSource="datasource" required="false">
+                <caption>On row deselected</caption>
+                <description>Fires in the context of a row when it is removed from the selection</description>
+            </property>
+        </propertyGroup>
+
+        <propertyGroup caption="Export">
+            <property key="enableCsvExport" type="boolean" defaultValue="false">
+                <caption>Enable CSV export</caption>
+                <description>Show an Export CSV button above the grid</description>
+            </property>
+            <property key="enableExcelExport" type="boolean" defaultValue="false">
+                <caption>Enable Excel export</caption>
+                <description>Show an Export Excel button above the grid (downloads a .xlsx file)</description>
+            </property>
+            <property key="enablePdfExport" type="boolean" defaultValue="false">
+                <caption>Enable PDF export</caption>
+                <description>Show an Export PDF button above the grid (downloads a .pdf file)</description>
+            </property>
+            <property key="csvFilename" type="string" required="false" defaultValue="export">
+                <caption>Export filename</caption>
+                <description>Filename for the downloaded file (without extension)</description>
+            </property>
+        </propertyGroup>
+
+        <propertyGroup caption="Toolbar">
+            <property key="toolbarWidgets" type="widgets" required="false">
+                <caption>Toolbar widgets</caption>
+                <description>Additional widgets shown in the toolbar next to the Export CSV button (e.g. Import button)</description>
+            </property>
+        </propertyGroup>
+
+        <propertyGroup caption="Behavior">
+            <property key="onRowClickAction" type="action" dataSource="datasource" required="false">
+                <caption>On row click</caption>
+                <description>Action to execute when the user clicks a row</description>
+            </property>
+            <property key="emptyPlaceholder" type="string" required="false" defaultValue="No data">
+                <caption>Empty placeholder</caption>
+                <description>Text shown when the data source returns no rows</description>
+            </property>
+        </propertyGroup>
+
+        <propertyGroup caption="Master / Detail">
+            <property key="enableMasterDetail" type="boolean" defaultValue="false">
+                <caption>Enable master / detail</caption>
+                <description>Show an expand toggle on each row. The detail content is configured as a drop zone directly on the page canvas (below the widget).</description>
+            </property>
+            <property key="detailContent" type="widgets" dataSource="datasource" required="false">
+                <caption>Detail content</caption>
+                <description>Widget(s) rendered in the collapsible detail panel below each master row (e.g. a nested Data Grid scoped to a child datasource via association)</description>
+            </property>
+            <property key="detailHeight" type="integer" defaultValue="200">
+                <caption>Detail panel height (px)</caption>
+                <description>Height of the expanded detail panel in pixels</description>
+            </property>
+        </propertyGroup>
+
+        <propertyGroup caption="Personalization">
+            <property key="configAttribute" type="attribute" required="false">
+                <caption>Configuration attribute</caption>
+                <description>Unlimited String attribute to persist filter, sort and column order settings. Surround the widget with a Data view to select an attribute.</description>
+                <attributeTypes>
+                    <attributeType name="String"/>
+                </attributeTypes>
+            </property>
+            <property key="onConfigChangeAction" type="action" required="false">
+                <caption>On configuration change</caption>
+                <description>Action executed after the configuration attribute is updated (e.g. to commit the object)</description>
+            </property>
+        </propertyGroup>
+
+        <propertyGroup caption="Filtering">
+            <property key="enableFilters" type="boolean" defaultValue="false">
+                <caption>Enable header filters</caption>
+                <description>Show a filter input in each column header to filter rows client-side</description>
+            </property>
+        </propertyGroup>
+
+        <propertyGroup caption="Summary row">
+            <property key="summaryPosition" type="enumeration" defaultValue="none">
+                <caption>Summary position</caption>
+                <description>Show a row with aggregate values (sum, count, average) above or below the data. Configure Aggregate per column in the Columns settings.</description>
+                <enumerationValues>
+                    <enumerationValue key="none">None</enumerationValue>
+                    <enumerationValue key="top">Top</enumerationValue>
+                    <enumerationValue key="bottom">Bottom</enumerationValue>
+                </enumerationValues>
+            </property>
+        </propertyGroup>
+
+        <propertyGroup caption="Appearance">
+            <property key="enableGroupBy" type="boolean" defaultValue="false">
+                <caption>Enable group by</caption>
+                <description>Show a Group by button in the toolbar. Columns with Group by enabled can then be toggled on/off as grouping levels.</description>
+            </property>
+            <property key="enableColumnChooser" type="boolean" defaultValue="false">
+                <caption>Enable column chooser</caption>
+                <description>Show a Columns button in the toolbar that lets users show or hide individual columns</description>
+            </property>
+            <property key="enableColumnReorder" type="boolean" defaultValue="false">
+                <caption>Enable column reordering</caption>
+                <description>Allow users to drag column headers to reorder columns</description>
+            </property>
+            <property key="rowHeight" type="integer" defaultValue="35">
+                <caption>Row height (px)</caption>
+                <description>Height of each data row in pixels</description>
+            </property>
+            <property key="gridHeight" type="integer" defaultValue="400">
+                <caption>Grid height (px)</caption>
+                <description>Total height of the grid in pixels</description>
+            </property>
+        </propertyGroup>
+
+    </properties>
+</widget>
