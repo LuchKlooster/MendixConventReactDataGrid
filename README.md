@@ -1,6 +1,6 @@
 # React Data Grid — Mendix Pluggable Widget
 
-![ConventSystems](https://github.com/LuchKlooster/MendixConventReactDataGrid/blob/main/docs/images/CS64x64.png)............![React Data Grid](https://github.com/LuchKlooster/MendixConventReactDataGrid/blob/main/docs/images/DataGrid.svg)
+![ConventSystems](https://github.com/LuchKlooster/MendixConventReactDataGrid/blob/main/docs/images/CS64x64.png)............![React Data Grid](https://github.com/LuchKlooster/MendixConventReactDataGrid/blob/main/docs/images/DataGrid.png)
 
 
 A high-performance data grid widget for Mendix, built on [react-data-grid](https://github.com/adazzle/react-data-grid). Supports large datasets, multi-column sorting, client-side filtering, row grouping, export to CSV / Excel / PDF, master/detail panels, and per-user personalization.
